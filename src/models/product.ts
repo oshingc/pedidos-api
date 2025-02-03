@@ -1,10 +1,21 @@
-// src/models/product.ts
-export class Product {
+import "reflect-metadata";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+
+@Entity("t_product")
+export class Product implements Record<string, unknown> {
+    [key: string]: unknown;
     
-    private id: number;
-    private name: string;
-    private price: number;
-    private stock: number;
+    @PrimaryGeneratedColumn({ name: "product_id" })
+    private id!: number;
+
+    @Column({ name: "product_name", type: "varchar" })
+    private name!: string;
+
+    @Column({ name: "price", type: "float" })
+    private price!: number;
+
+    @Column({ name: "stock", type: "int" })
+    private stock!: number;
 
     constructor(
         id: number,
@@ -17,7 +28,16 @@ export class Product {
             this.stock = stock;
     }
 
-	public getId(): number {
+    toJSON() {
+        return {
+            id: this.id,
+            name: this.name,
+            price: this.price,
+            stock: this.stock
+        };
+    }
+
+	public getId = (): number => {
 		return this.id;
 	}
 

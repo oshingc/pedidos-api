@@ -1,8 +1,18 @@
-export class Order {
+import "reflect-metadata";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
-    private id: number;
-    private productId: number;
-    private quantity: number;
+@Entity("t_order")
+export class Order implements Record<string, unknown> {
+    [key: string]: unknown;
+    
+    @PrimaryGeneratedColumn({ name: "order_id" })
+    private id!: number;
+
+    @Column({ name: "product_id" })
+    private productId!: number;
+
+    @Column({ name: "quantity", type: "int" })
+    private quantity!: number;
 
     constructor(id: number,
                 productId: number,
