@@ -1,7 +1,16 @@
 import {Request, Response} from "express";
 import {Product} from "../models/product";
 import { getProducts, findProductById } from "../helpers/productHelper";
-import { error } from "console";
+import { ProductRepository } from "./../repositories/productRepository";
+import { mongodbDatabase } from "../adapters/mongodbDatabase";
+import { sqlliteDatabase } from "../adapters/sqliteDatabase";
+
+// Dynamically decide which database to use
+const dbAdapter = process.env.DATABASE_TYPE === 'mongodb'
+? new mongodbDatabase<Product>() 
+: new sqlliteDatabase<Product>();
+
+const productRepository = new ProductRepository(dbAdapter);
 
 //fetch products
 export const getAllProducts = (req: Request, res: Response) => {
@@ -44,7 +53,8 @@ export const createProduct = (req: Request, res: Response) => {
 
     try {
         products.push(product);
-    } catch(error) {
+    } catch(error: unknown) {
+        console.error(error);
         res.status(500).json({ error: "Internal server error"})
     }
     
@@ -77,13 +87,14 @@ export const updateProduct = (req: Request, res: Response) => {
     product.setName(name);
     product.setPrice(parseFloat(price));
     product.setStock(parseInt(stock));
+    productRepository.update(product);
 
     res.json(product);
 };
 
 export const deleteProduct = (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
-    const products = getProducts();
+    const products: Product[] = getProducts();
     const index = products.findIndex(p => p.getId() === id);
 
     if (index === -1) {

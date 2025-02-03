@@ -1,6 +1,6 @@
 import { Order } from "../models/order";
 
-let orders: Order[] = [];
+const orders: Order[] = [];
 
 export const getOrders = (): Order[] => orders;
 
