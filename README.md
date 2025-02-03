@@ -7,4 +7,4 @@ DATABASE_TYPE=sqlite
 (for example this is for sqlite other values will pick MongoDB, current support for now.)
 
 
-![Uploading IMG_4409.JPG…]()
+![IMG_4409](https://github.com/user-attachments/assets/caeb4bac-2fd5-4ba6-a2c4-72c5e7ec268b)
